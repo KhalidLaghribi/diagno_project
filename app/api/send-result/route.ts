@@ -90,6 +90,26 @@ async function generateAdminEmailHtml(
   );
   template = template.replace("{{phone_number}}", phone || "Non fourni");
 
+  const programTitles: Record<number, string> = {
+    1: "Création d'entreprise",
+    2: "Développement commercial",
+    3: "Structuration",
+    4: "Optimisation",
+    5: "Expertise",
+    6: "Pilotage",
+  };
+
+  const recommendedPrograms = (result.checkedCount || [])
+    .map((count, index) => ({ stepId: index + 1, count }))
+    .filter(({ count }) => count >= 3)
+    .map(({ stepId }) => `<li>${programTitles[stepId] || `Étape ${stepId}`}</li>`)
+    .join("");
+
+  template = template.replace(
+    "{{recommended_programs}}",
+    recommendedPrograms || "<li>Aucun accompagnement prioritaire identifié</li>"
+  );
+
   return template;
 }
 
