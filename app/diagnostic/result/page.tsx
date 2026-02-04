@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import Image from "next/image";
 import ResultCard from "@/components/diagnostic/ResultCard";
 import { DiagnosticResult, StepId } from "@/types/diagnostic";
 
@@ -19,7 +20,22 @@ function ResultContent() {
 
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com";
 
-  return <ResultCard result={result} calendlyUrl={calendlyUrl} />;
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full max-w-3xl">
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/images/hlp-logo-noir-header.png"
+            alt="HLP"
+            width={160}
+            height={48}
+            priority
+          />
+        </div>
+        <ResultCard result={result} calendlyUrl={calendlyUrl} />
+      </div>
+    </div>
+  );
 }
 
 export default function ResultPage() {

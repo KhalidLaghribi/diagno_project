@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { STEPS } from "@/data/questions";
 import { UserAnswers, EmailFormData } from "@/types/diagnostic";
 import { calculateDiagnosticResult } from "@/lib/diagnostic";
@@ -101,6 +102,15 @@ export default function DiagnosticPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-8">
         <div className="w-full max-w-3xl">
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/images/hlp-logo-noir-header.png"
+              alt="HLP"
+              width={160}
+              height={48}
+              priority
+            />
+          </div>
           <div key="email-step" className="animate-fadeIn">
             <EmailStep onSubmit={handleEmailSubmit} isLoading={isLoading} />
           </div>
@@ -112,6 +122,15 @@ export default function DiagnosticPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-8">
       <div className="w-full max-w-3xl">
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/images/hlp-logo-noir-header.png"
+            alt="HLP"
+            width={160}
+            height={48}
+            priority
+          />
+        </div>
         <Stepper currentStep={currentStepIndex + 1} totalSteps={totalSteps} />
         
         <div key={currentStep.id} className="animate-fadeIn">
@@ -179,13 +198,6 @@ export default function DiagnosticPage() {
               />
             </svg>
           </button>
-        </div>
-
-        {/* Indicateur de progression textuel */}
-        <div className="text-center mt-6">
-          <p className="text-xs text-gray-500">
-            Appuyez sur Entrée pour continuer
-          </p>
         </div>
       </div>
     </div>

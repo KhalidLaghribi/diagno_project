@@ -36,7 +36,10 @@ function loadEmailTemplate(templateName: string): string {
 
 function withCommonVars(html: string): string {
   const logoUrl = `${baseUrl}/images/hlp-logo-noir-header.png`;
-  return html.replaceAll("{{LOGO_URL}}", logoUrl);
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com";
+  return html
+    .replaceAll("{{LOGO_URL}}", logoUrl)
+    .replaceAll("{{CALENDLY_URL}}", calendlyUrl);
 }
 
 function generateAdminEmailHtml(
