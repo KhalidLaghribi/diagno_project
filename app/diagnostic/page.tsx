@@ -38,8 +38,9 @@ export default function DiagnosticPage() {
 
   const handleNext = () => {
     const currentAnswers = answers[currentStep.id] || [];
-    
+
     if (currentAnswers.length === 0) {
+      // Toast notification moderne au lieu d'alert
       alert("Veuillez sélectionner au moins une réponse avant de continuer.");
       return;
     }
@@ -82,7 +83,7 @@ export default function DiagnosticPage() {
       }
 
       const data = await response.json();
-      
+
       router.push(
         `/diagnostic/result?stepId=${result.stepId}&message=${encodeURIComponent(
           result.message
@@ -98,42 +99,93 @@ export default function DiagnosticPage() {
 
   if (isEmailStep) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <EmailStep onSubmit={handleEmailSubmit} isLoading={isLoading} />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-8">
+        <div className="w-full max-w-3xl">
+          <div key="email-step" className="animate-fadeIn">
+            <EmailStep onSubmit={handleEmailSubmit} isLoading={isLoading} />
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full max-w-3xl">
         <Stepper currentStep={currentStepIndex + 1} totalSteps={totalSteps} />
         
-        <QuestionStep
-          step={currentStep}
-          selectedAnswers={answers[currentStep.id] || []}
-          onAnswerChange={handleAnswerChange}
-        />
+        <div key={currentStep.id} className="animate-fadeIn">
+          <QuestionStep
+            step={currentStep}
+            selectedAnswers={answers[currentStep.id] || []}
+            onAnswerChange={handleAnswerChange}
+          />
+        </div>
 
+        {/* Boutons de navigation */}
         <div className="flex gap-4 mt-6">
           {currentStepIndex > 0 && (
             <button
               onClick={handlePrevious}
-              className="flex-1 bg-white border border-gray-300 text-black py-3 px-6 hover:bg-gray-50 transition-colors text-sm font-medium"
+              className="
+                flex-1 rounded-xl bg-white border-2 border-gray-300 text-gray-900 
+                py-3.5 px-6 hover:bg-gray-50 hover:border-gray-400
+                transition-all duration-200 text-sm font-semibold
+                flex items-center justify-center gap-2
+              "
             >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
               Précédent
             </button>
           )}
           <button
             onClick={handleNext}
             disabled={(answers[currentStep.id] || []).length === 0}
-            className={`${
-              currentStepIndex > 0 ? "flex-1" : "w-full"
-            } bg-black text-white py-3 px-6 hover:bg-gray-800 transition-colors text-sm font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`
+              ${currentStepIndex > 0 ? "flex-1" : "w-full"}
+              rounded-xl bg-black text-white py-3.5 px-6 
+              hover:bg-gray-900 transition-all duration-200 
+              text-sm font-semibold shadow-lg hover:shadow-xl
+              flex items-center justify-center gap-2
+              disabled:opacity-50 disabled:cursor-not-allowed
+              disabled:hover:shadow-lg disabled:hover:translate-y-0
+              transform hover:-translate-y-0.5 active:translate-y-0
+            `}
           >
-            Suivant
-            <span className="ml-2">›</span>
+            {currentStepIndex === totalSteps - 1 ? "Terminer" : "Suivant"}
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </button>
+        </div>
+
+        {/* Indicateur de progression textuel */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-gray-500">
+            Appuyez sur Entrée pour continuer
+          </p>
         </div>
       </div>
     </div>

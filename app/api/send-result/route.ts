@@ -90,32 +90,36 @@ function generateClientEmailHtml(
 function generateRecommendedPrograms(result: DiagnosticResult): string {
   const programs = [];
 
+  const primaryCount = result.checkedCount[(result.stepId as number) - 1] || 0;
+
   // Based on the primary step, recommend relevant programs
-  switch (result.stepId) {
-    case 1:
-      programs.push('<li>Accompagnement "Idée → Projet" - Pour transformer votre idée en un business concret</li>');
-      break;
-    case 2:
-      programs.push('<li>Accompagnement "Visibilité et Ventes" - Pour attirer des clients et vendre régulièrement</li>');
-      break;
-    case 3:
-      programs.push('<li>Accompagnement "Gestion Maîtrisée" - Pour comprendre vos chiffres et retrouver la sérénité</li>');
-      break;
-    case 4:
-      programs.push('<li>Accompagnement "Optimisation" - Pour gagner en efficacité et en stratégie</li>');
-      break;
-    case 5:
-      programs.push('<li>Accompagnement "Expertise Structurée" - Pour valoriser et transmettre votre savoir-faire</li>');
-      break;
-    case 6:
-      programs.push('<li>Accompagnement "Dirigeant Stratège" - Pour prendre du recul et piloter avec vision</li>');
-      break;
+  if (primaryCount >= 3) {
+    switch (result.stepId) {
+      case 1:
+        programs.push('<li>Accompagnement "Idée → Projet" - Pour transformer votre idée en un business concret</li>');
+        break;
+      case 2:
+        programs.push('<li>Accompagnement "Visibilité et Ventes" - Pour attirer des clients et vendre régulièrement</li>');
+        break;
+      case 3:
+        programs.push('<li>Accompagnement "Gestion Maîtrisée" - Pour comprendre vos chiffres et retrouver la sérénité</li>');
+        break;
+      case 4:
+        programs.push('<li>Accompagnement "Optimisation" - Pour gagner en efficacité et en stratégie</li>');
+        break;
+      case 5:
+        programs.push('<li>Accompagnement "Expertise Structurée" - Pour valoriser et transmettre votre savoir-faire</li>');
+        break;
+      case 6:
+        programs.push('<li>Accompagnement "Dirigeant Stratège" - Pour prendre du recul et piloter avec vision</li>');
+        break;
+    }
   }
 
   // Also recommend secondary programs based on other high-scoring areas
   const secondarySteps = result.checkedCount
     .map((count, index) => ({ step: index + 1, count }))
-    .filter(item => item.count > 0 && item.step !== result.stepId)
+    .filter(item => item.count >= 3 && item.step !== result.stepId)
     .sort((a, b) => b.count - a.count)
     .slice(0, 2);
 
