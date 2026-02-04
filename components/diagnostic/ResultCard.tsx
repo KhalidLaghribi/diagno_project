@@ -2,6 +2,7 @@
 
 import { DiagnosticResult } from "@/types/diagnostic";
 import { RESULT_MESSAGES } from "@/data/questions";
+import { BarChart3, Lock } from "lucide-react";
 
 interface ResultCardProps {
   result: DiagnosticResult;
@@ -88,7 +89,11 @@ export default function ResultCard({ result, calendlyUrl }: ResultCardProps) {
             {stepsWithMessage.length === 0 ? (
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
                 <p className="text-sm text-gray-700 leading-relaxed">
-                  <span className="font-semibold">📊 Note :</span> Aucune étape n'atteint 
+                  <span className="font-semibold inline-flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4 text-gold-700" aria-hidden="true" />
+                    <span>Note :</span>
+                  </span>
+                  Aucune étape n'atteint 
                   3 réponses ou plus. Le résultat principal ci-dessus est calculé sur la 
                   catégorie la plus représentée dans vos réponses.
                 </p>
@@ -262,7 +267,10 @@ export default function ResultCard({ result, calendlyUrl }: ResultCardProps) {
 
           {/* Note de confidentialité */}
           <p className="text-xs text-gray-500 text-center mt-6 italic">
-            🔒 Vos données sont confidentielles et ne seront jamais partagées avec des tiers
+            <span className="inline-flex items-center justify-center gap-2">
+              <Lock className="w-4 h-4 text-gray-500" aria-hidden="true" />
+              <span>Vos données sont confidentielles et ne seront jamais partagées avec des tiers</span>
+            </span>
           </p>
         </div>
       </div>

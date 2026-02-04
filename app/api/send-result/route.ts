@@ -27,7 +27,7 @@ async function loadEmailTemplate(templateName: string): Promise<string> {
 
     return await response.text();
   } catch (error) {
-    console.error("❌ Error loading template:", error);
+    console.error("Error loading template:", error);
     return `<html><body><p>Error loading email template</p></body></html>`;
   }
 }

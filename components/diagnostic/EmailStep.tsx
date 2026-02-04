@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EmailFormData } from "@/types/diagnostic";
+import { Phone, Sparkles } from "lucide-react";
 
 interface EmailStepProps {
   onSubmit: (data: EmailFormData) => void;
@@ -108,7 +109,10 @@ export default function EmailStep({ onSubmit, isLoading }: EmailStepProps) {
         {/* Proposition d'échange */}
         <div className="border-l-4 border-gold bg-gold-50 rounded-r-xl p-5 mb-6">
           <p className="text-sm font-semibold text-gray-900 mb-3">
-            📞 Nous vous proposerons un échange pour approfondir
+            <span className="inline-flex items-center gap-2">
+              <Phone className="w-4 h-4 text-gold-700" aria-hidden="true" />
+              <span>Nous vous proposerons un échange pour approfondir</span>
+            </span>
           </p>
 
           <p className="text-sm text-gray-700 mb-3">
@@ -135,7 +139,10 @@ export default function EmailStep({ onSubmit, isLoading }: EmailStepProps) {
           </ul>
 
           <p className="text-xs italic text-gray-600 bg-white px-3 py-2 rounded-lg inline-block">
-            ✨ Échange gratuit et sans engagement
+            <span className="inline-flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-gold-700" aria-hidden="true" />
+              <span>Échange gratuit et sans engagement</span>
+            </span>
           </p>
         </div>
 

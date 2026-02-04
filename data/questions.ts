@@ -3,7 +3,7 @@ import { Step } from "@/types/diagnostic";
 export const STEPS: Step[] = [
   {
     id: 1,
-    emoji: "🟢",
+    emoji: "",
     title: "Concrétiser son projet de création d'entreprise",
     subtitle: "Coche ce qui te ressemble le plus :",
     questions: [
@@ -31,7 +31,7 @@ export const STEPS: Step[] = [
   },
   {
     id: 2,
-    emoji: "🟡",
+    emoji: "",
     title: "Développer sa visibilité et ses ventes",
     subtitle: "Coche ce qui te ressemble le plus :",
     questions: [
@@ -59,7 +59,7 @@ export const STEPS: Step[] = [
   },
   {
     id: 3,
-    emoji: "🟠",
+    emoji: "",
     title: "Maîtriser sa gestion et retrouver de la sérénité",
     subtitle: "Coche ce qui te ressemble le plus :",
     questions: [
@@ -87,7 +87,7 @@ export const STEPS: Step[] = [
   },
   {
     id: 4,
-    emoji: "🔵",
+    emoji: "",
     title: "Optimiser son organisation et sa stratégie",
     subtitle: "Coche ce qui te ressemble le plus :",
     questions: [
@@ -115,7 +115,7 @@ export const STEPS: Step[] = [
   },
   {
     id: 5,
-    emoji: "🟣",
+    emoji: "",
     title: "Structurer son expertise pour la transmettre",
     subtitle: "Coche ce qui te ressemble le plus :",
     questions: [
@@ -143,7 +143,7 @@ export const STEPS: Step[] = [
   },
   {
     id: 6,
-    emoji: "🔴",
+    emoji: "",
     title: "Adopter une posture de dirigeant·e stratège",
     subtitle: "Coche ce qui te ressemble le plus :",
     questions: [

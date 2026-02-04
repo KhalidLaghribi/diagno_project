@@ -1,6 +1,7 @@
 "use client";
 
 import { Step } from "@/types/diagnostic";
+import { Lightbulb } from "lucide-react";
 
 interface QuestionStepProps {
   step: Step;
@@ -39,8 +40,10 @@ export default function QuestionStep({
       {/* Instructions */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
         <p className="text-sm text-gray-700">
-          <span className="font-semibold">💡 Astuce :</span> Sélectionnez toutes 
-          les affirmations qui correspondent à votre situation actuelle.
+          <span className="font-semibold text-gold-700 ">
+            <Lightbulb className="inline-block w-4 h-4 mr-1" /> Astuce :
+          </span>
+          Sélectionnez toutes les affirmations qui correspondent à votre situation actuelle.
         </p>
       </div>
 
