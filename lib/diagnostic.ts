@@ -5,37 +5,31 @@ export function calculateDiagnosticResult(
   answers: UserAnswers
 ): DiagnosticResult {
 
-  const checkedCount: number[] = [];
+  const orderedStepIds = Array.from(new Set(STEPS.map((s) => s.stepId)));
+  const maxStepId = Math.max(...orderedStepIds);
 
-  // 1. Calculer le nombre de cases cochées par étape
-  for (let stepId = 1; stepId <= 6; stepId++) {
+  const checkedCount: number[] = Array.from({ length: maxStepId }, (_, i) => {
+    const stepId = i + 1;
+    return answers[stepId]?.length || 0;
+  });
+
+  for (const stepId of orderedStepIds) {
     const count = answers[stepId]?.length || 0;
-    checkedCount.push(count);
+    if (count >= 3) {
+      return {
+        stepId: stepId as StepId,
+        message:
+          RESULT_MESSAGES[stepId] ||
+          "Un accompagnement a été identifié sur la base de vos réponses.",
+        checkedCount,
+      };
+    }
   }
-
-  // 2. Trouver les étapes éligibles (au moins 3 cases cochées)
-  const eligibleSteps = checkedCount
-    .map((count, index) => ({ stepId: (index + 1) as StepId, count }))
-    .filter(item => item.count >= 3);
-
-  // 3. Si aucune étape n'est éligible
-  if (eligibleSteps.length === 0) {
-    return {
-      stepId: 0 as StepId,
-      message:
-        "Vos réponses sont trop dispersées. Pour obtenir un diagnostic fiable, merci de cocher au moins 3 affirmations dans une même catégorie.",
-      checkedCount,
-    };
-  }
-
-  // 4. Trouver l’étape éligible avec le plus grand nombre de réponses
-  const bestStep = eligibleSteps.reduce((prev, current) =>
-    current.count > prev.count ? current : prev
-  );
 
   return {
-    stepId: bestStep.stepId,
-    message: RESULT_MESSAGES[bestStep.stepId],
+    stepId: 0 as StepId,
+    message:
+      "Vos réponses sont trop dispersées. Pour obtenir un diagnostic fiable, merci de cocher au moins 3 affirmations dans une même catégorie.",
     checkedCount,
   };
 }

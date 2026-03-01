@@ -65,15 +65,20 @@ async function generateAdminEmailHtml(
     "optimisation",
     "expertise",
     "pilotage",
+    "urgence",
+    "impact",
+    "decision",
   ];
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 9; i++) {
     const stepAnswers = answers[i] || [];
-    const step = STEPS.find((s) => s.id === i);
+    const stepQuestions = STEPS.filter((s) => s.stepId === i).flatMap(
+      (s) => s.questions
+    );
 
     const selectedAnswers = stepAnswers
       .map((answerId) => {
-        const question = step?.questions.find((q) => q.id === answerId);
+        const question = stepQuestions.find((q) => q.id === answerId);
         return question ? `<li>${question.text}</li>` : "";
       })
       .join("");
@@ -97,13 +102,15 @@ async function generateAdminEmailHtml(
     4: "Optimisation",
     5: "Expertise",
     6: "Pilotage",
+    7: "Diagnostic situation",
+    8: "Impact",
+    9: "Prise de décision",
   };
 
-  const recommendedPrograms = (result.checkedCount || [])
-    .map((count, index) => ({ stepId: index + 1, count }))
-    .filter(({ count }) => count >= 3)
-    .map(({ stepId }) => `<li>${programTitles[stepId] || `Étape ${stepId}`}</li>`)
-    .join("");
+  const recommendedPrograms =
+    result.stepId && result.stepId > 0
+      ? `<li>${programTitles[result.stepId] || `Étape ${result.stepId}`}</li>`
+      : "";
 
   template = template.replace(
     "{{recommended_programs}}",
@@ -181,6 +188,21 @@ export async function POST(request: NextRequest) {
       phone
     );
 
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
+
+    const adminEmailResult = await sendViaSmtp(
+      adminEmail,
+      adminEmailHtml,
+      "Nouveau diagnostic entrepreneurial reçu"
+    );
+
+    if (!adminEmailResult.success) {
+      return NextResponse.json(
+        { error: adminEmailResult.error },
+        { status: 500 }
+      );
+    }
+
     const clientEmailResult = await sendViaSmtp(
       email,
       clientEmailHtml,
@@ -193,17 +215,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const adminEmail =
-      process.env.ADMIN_EMAIL || "admin@example.com";
-
-    await sendViaSmtp(
-      adminEmail,
-      adminEmailHtml,
-      "Nouveau diagnostic entrepreneurial reçu"
-    );
 
     return NextResponse.json({
       success: true,

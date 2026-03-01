@@ -10,9 +10,10 @@ interface ResultCardProps {
 }
 
 export default function ResultCard({ result, calendlyUrl }: ResultCardProps) {
-  const stepsWithMessage = result.checkedCount
-    .map((count, index) => ({ stepId: index + 1, count }))
-    .filter(({ count }) => count >= 3);
+  const selectedStepId = result.stepId;
+  const selectedCount =
+    selectedStepId > 0 ? result.checkedCount[selectedStepId - 1] || 0 : 0;
+  const hasRecommendation = selectedStepId > 0 && selectedCount >= 3;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-8">
@@ -86,62 +87,55 @@ export default function ResultCard({ result, calendlyUrl }: ResultCardProps) {
               </h3>
             </div>
 
-            {stepsWithMessage.length === 0 ? (
+            {!hasRecommendation ? (
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
                 <p className="text-sm text-gray-700 leading-relaxed">
                   <span className="font-semibold inline-flex items-center gap-2">
                     <BarChart3 className="w-4 h-4 text-gold-700" aria-hidden="true" />
                     <span>Note :</span>
                   </span>
-                  Aucune étape n'atteint 
-                  3 réponses ou plus. Le résultat principal ci-dessus est calculé sur la 
-                  catégorie la plus représentée dans vos réponses.
+                  Aucune étape n'atteint 3 réponses ou plus.
                 </p>
               </div>
             ) : (
               <div className="space-y-4">
                 <p className="text-sm text-gray-600 mb-4">
-                  Les étapes où vous avez sélectionné au moins 3 affirmations :
+                  L’accompagnement à privilégier selon vos réponses :
                 </p>
-                
-                {stepsWithMessage.map(({ stepId, count }) => (
-                  <div
-                    key={stepId}
-                    className="bg-white border-2 border-gray-200 hover:border-gold rounded-xl p-5 sm:p-6 transition-all duration-200 hover:shadow-md"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-black text-white rounded-lg flex items-center justify-center font-bold">
-                          {stepId}
-                        </div>
-                        <div>
-                          <span className="text-sm font-semibold text-gray-900">
-                            Étape {stepId}
-                          </span>
-                          <p className="text-xs text-gray-500">
-                            {count} {count === 1 ? "réponse" : "réponses"}
-                          </p>
-                        </div>
+
+                <div className="bg-white border-2 border-gray-200 hover:border-gold rounded-xl p-5 sm:p-6 transition-all duration-200 hover:shadow-md">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-black text-white rounded-lg flex items-center justify-center font-bold">
+                        {selectedStepId}
                       </div>
-                      
-                      {/* Badge de progression */}
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className={`h-2 w-2 rounded-full ${
-                              i < count ? "bg-gold" : "bg-gray-200"
-                            }`}
-                          />
-                        ))}
+                      <div>
+                        <span className="text-sm font-semibold text-gray-900">
+                          Étape {selectedStepId}
+                        </span>
+                        <p className="text-xs text-gray-500">
+                          {selectedCount} {selectedCount === 1 ? "réponse" : "réponses"}
+                        </p>
                       </div>
                     </div>
-                    
-                    <div className="text-sm text-gray-700 leading-relaxed pl-13">
-                      {RESULT_MESSAGES[stepId]}
+
+                    {/* Badge de progression */}
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`h-2 w-2 rounded-full ${
+                            i < selectedCount ? "bg-gold" : "bg-gray-200"
+                          }`}
+                        />
+                      ))}
                     </div>
                   </div>
-                ))}
+
+                  <div className="text-sm text-gray-700 leading-relaxed pl-13">
+                    {RESULT_MESSAGES[selectedStepId] || result.message}
+                  </div>
+                </div>
               </div>
             )}
           </div>

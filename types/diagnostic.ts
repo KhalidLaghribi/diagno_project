@@ -1,13 +1,15 @@
-export type StepId = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface Question {
   id: string;
   text: string;
 }
 
+export type StepId = number;
+
 export interface Step {
-  id: StepId;
+  id: number;
   emoji: string;
+  stepId: StepId;
   title: string;
   subtitle: string;
   questions: Question[];

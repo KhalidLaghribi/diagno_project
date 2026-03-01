@@ -20,7 +20,7 @@ export default function QuestionStep({
       <div className="inline-flex items-center gap-2 mb-6">
         <div className="h-8 w-1 bg-gold rounded-full"></div>
         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-          Étape {step.id}
+          Étape {step.stepId}
         </span>
       </div>
 

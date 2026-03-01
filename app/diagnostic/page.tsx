@@ -18,27 +18,31 @@ export default function DiagnosticPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const currentStep = STEPS[currentStepIndex];
-  const totalSteps = STEPS.length;
+  const totalSteps = Math.max(...STEPS.map((s) => s.stepId));
+
+  const currentScreenAnswers = (answers[currentStep.stepId] || []).filter((answerId) =>
+    currentStep.questions.some((q) => q.id === answerId)
+  );
 
   const handleAnswerChange = (questionId: string, checked: boolean) => {
     setAnswers((prev) => {
-      const stepAnswers = prev[currentStep.id] || [];
+      const stepAnswers = prev[currentStep.stepId] || [];
       if (checked) {
         return {
           ...prev,
-          [currentStep.id]: [...stepAnswers, questionId],
+          [currentStep.stepId]: [...stepAnswers, questionId],
         };
       } else {
         return {
           ...prev,
-          [currentStep.id]: stepAnswers.filter((id) => id !== questionId),
+          [currentStep.stepId]: stepAnswers.filter((id) => id !== questionId),
         };
       }
     });
   };
 
   const handleNext = () => {
-    const currentAnswers = answers[currentStep.id] || [];
+    const currentAnswers = currentScreenAnswers;
 
     if (currentAnswers.length === 0) {
       // Toast notification moderne au lieu d'alert
@@ -46,7 +50,7 @@ export default function DiagnosticPage() {
       return;
     }
 
-    if (currentStepIndex < totalSteps - 1) {
+    if (currentStepIndex < STEPS.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
       setIsEmailStep(true);
@@ -131,12 +135,12 @@ export default function DiagnosticPage() {
             priority
           />
         </div>
-        <Stepper currentStep={currentStepIndex + 1} totalSteps={totalSteps} />
+        <Stepper currentStep={currentStep.stepId} totalSteps={totalSteps} />
         
         <div key={currentStep.id} className="animate-fadeIn">
           <QuestionStep
             step={currentStep}
-            selectedAnswers={answers[currentStep.id] || []}
+            selectedAnswers={answers[currentStep.stepId] || []}
             onAnswerChange={handleAnswerChange}
           />
         </div>
@@ -171,7 +175,7 @@ export default function DiagnosticPage() {
           )}
           <button
             onClick={handleNext}
-            disabled={(answers[currentStep.id] || []).length === 0}
+            disabled={currentScreenAnswers.length === 0}
             className={`
               ${currentStepIndex > 0 ? "flex-1" : "w-full"}
               rounded-xl bg-black text-white py-3.5 px-6 
@@ -183,7 +187,7 @@ export default function DiagnosticPage() {
               transform hover:-translate-y-0.5 active:translate-y-0
             `}
           >
-            {currentStepIndex === totalSteps - 1 ? "Terminer" : "Suivant"}
+            {currentStepIndex === STEPS.length - 1 ? "Terminer" : "Suivant"}
             <svg
               className="w-4 h-4"
               fill="none"
