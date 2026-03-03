@@ -124,6 +124,58 @@ async function generateClientEmailHtml(
   result: DiagnosticResult
 ): Promise<string> {
   let template = await loadEmailTemplate("email-client");
+
+  const stepId = result.stepId;
+  const selectedBlockName =
+    stepId === 1
+      ? "creation"
+      : stepId === 2
+        ? "devcom"
+        : stepId === 3
+          ? "structuration"
+          : stepId === 4
+            ? "optimisation"
+            : stepId === 5
+              ? "expertise"
+              : stepId === 6
+                ? "pilotage"
+                : null;
+
+  const defaultMessage =
+    selectedBlockName === null
+      ? result.message
+      : "";
+
+  template = template.replaceAll("{{default_message}}", defaultMessage);
+
+  const blockNames = [
+    "creation",
+    "devcom",
+    "structuration",
+    "optimisation",
+    "expertise",
+    "pilotage",
+    "default",
+  ] as const;
+
+  for (const name of blockNames) {
+    const shouldKeep =
+      (selectedBlockName !== null && name === selectedBlockName) ||
+      (selectedBlockName === null && name === "default");
+
+    const blockRegex = new RegExp(
+      `\\s*<!--\\s*BLOCK_START:${name}\\s*-->[\\s\\S]*?<!--\\s*BLOCK_END:${name}\\s*-->\\s*`,
+      "g"
+    );
+
+    if (!shouldKeep) {
+      template = template.replace(blockRegex, "");
+    } else {
+      template = template.replaceAll(`<!-- BLOCK_START:${name} -->`, "");
+      template = template.replaceAll(`<!-- BLOCK_END:${name} -->`, "");
+    }
+  }
+
   return withCommonVars(template);
 }
 
