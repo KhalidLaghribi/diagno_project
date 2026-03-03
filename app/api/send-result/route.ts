@@ -147,10 +147,17 @@ async function sendViaSmtp(
       from: `"${process.env.SMTP_FROM_NAME || "Diagnostic"}" <${process.env.SMTP_USER}>`,
       to: email,
       subject,
+      text: "Votre client email ne supporte pas l'affichage HTML. Merci de consulter le contenu sur un autre appareil.",
       html: emailHtml,
     });
 
-    return { success: true, messageId: info.messageId };
+    return {
+      success: true,
+      messageId: info.messageId,
+      accepted: info.accepted,
+      rejected: info.rejected,
+      response: info.response,
+    };
   } catch (error) {
     console.error("SMTP error:", error);
     return {
@@ -197,6 +204,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!adminEmailResult.success) {
+      console.error("Admin email failed:", { to: adminEmail, error: adminEmailResult.error });
       return NextResponse.json(
         { error: adminEmailResult.error },
         { status: 500 }
@@ -210,10 +218,19 @@ export async function POST(request: NextRequest) {
     );
 
     if (!clientEmailResult.success) {
+      console.error("Client email failed:", { to: email, error: clientEmailResult.error });
       return NextResponse.json(
         { error: clientEmailResult.error },
         { status: 500 }
       );
+    }
+
+    if (Array.isArray((clientEmailResult as any).rejected) && (clientEmailResult as any).rejected.length > 0) {
+      console.error("Client email rejected by server:", {
+        to: email,
+        rejected: (clientEmailResult as any).rejected,
+        response: (clientEmailResult as any).response,
+      });
     }
 
     return NextResponse.json({
