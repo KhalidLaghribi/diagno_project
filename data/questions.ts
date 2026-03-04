@@ -56,7 +56,7 @@ export const STEPS: Step[] = [
   {
     id: 5,
     emoji: "🟠",
-    stepId: 2,
+    stepId: 3,
     title: "Étape 3 - Gérer la comptabilité, les finances et l’administratif",
     subtitle: "Coche les cases qui vous ressemblent le plus aujourd’hui",
     questions: [
